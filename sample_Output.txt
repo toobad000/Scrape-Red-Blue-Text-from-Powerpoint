@@ -1,0 +1,56 @@
+Red and Blue Colored Text:
+
+Slide 2: Module 11 Content: Why a control plane is needed for VXLAN? MP-BGP EVPN control plane  MP-BGP EVPN VXLAN Layer 2 and Layer 3 Multi-tenancy  MP-BGP EVPN VXLAN Underlay designs Distributed IP AGM “Anycast Gateway MAC” Symmetric “Integrated Routing and Bridging (IRB)”
+
+Slide 3: Why do we need a Control Plane for VXLAN?                       VTEP = VXLAN Tunnel Endpoint RFC = Request for Comment
+
+Slide 4: MP-BGP Control plane  VXLAN 
+
+Slide 5: Figure 1: NLRI = Network Layer Reachability information
+
+Slide 6: (Cont.)   Route Distinguisher (RD) and Route Target (RT). Route Target (RT) VRF = Virtual Routing and Forwarding RD = Route Distinguisher RT = Route Target
+
+Slide 7: (Cont.)   VXLAN   overlay
+
+Slide 8: Provides control plane learning and distribution for end host Layer 2 and Layer 3 reachability information. Supports Multi-tenancy and efficient way to track host mobility Minimizes (Reduces) but does not eliminate network flooding through protocol-driven host MAC/IP BGP route distribution With the MP-BGP EVPN control plane for VXLAN, a VTEP device first needs to establish BGP neighbor adjacency with other VTEPs or with Internal BGP (iBGP) route reflectors. In addition to the BGP updates for end-host NLRI, VTEPs exchange information about themselves through BGP, hence EVPN Control plane Provides Peer discovery and authentication between VTEPs to improve security
+
+Slide 9: BGP Route Type(s)   BGP route type 5  NLRI = Network Layer Reachability Information  EVPN NLRI
+
+Slide 10: BGP Route Type 2 details
+
+Slide 11: BGP Route Type 5 details Fields description of BGP route type 5  L3 VNI = Layer 3 VNI 
+
+Slide 12: BGP route type 2 1- VTEP V1 advertises Host “A”s MAC address via BGP route type 2 to BGP RR and populates its MAC address table with Host “A”s MAC address information 2- RR advertises Host “A” MAC address to rest of VTEPs with Host “A” MAC address and its reachability information Notes:
+
+Slide 13: BGP route type 5 MPLS Label (Layer 3 VNI) Extended Communities, carries Route Target (RT) information 
+
+Slide 14: (with a higher sequence number)  Host Mobility
+
+Slide 17: The Bridge Domain is the Layer 2 Segment from Host to Host VTEP#1 VTEP#2 “ Layer 2 multi-tenancy using the various modes of operations, the destination VNI to which the service is mapped is always a Layer 2 VNI” VTEP1 VTEP2 Note: VLAN number  has  a local significance  on the VTEP  switch,while VNI number has a global significance, so VLAN 100 On VTEP1 & VLAN 200 on           VTEP2 can communicate as  long as they are mapped  to the same VNI (3001)
+
+Slide 18: Layer 3 Multi-tenancy and segmentation among VXLAN tenants is achieved by applying Layer 3 VRF technology and enforcing routing isolation between tenants by using a  separate Layer 3 VNI mapped to each VRF instance .  Every tenant VRF uses a dedicated VXLAN Layer 3 VNI All routed traffic uses a Layer 3 VNI to reach destination                                                                                                    within in the same VRF Route leaking is permitted between Layer 3 VRFs
+
+Slide 19: SVI = Switched Virtual Interface
+
+Slide 21: IGP = Interior Gateway Protocol BUM= Broadcast, unknown-unicast & Multicast RR = Route Reflector RP = Rendezvous point IS-IS = Intermediate System to Intermediate System
+
+Slide 22: Two AS eBGP   Two AS eBGP is the recommended Underlay design model for customer deployments AS = Autonomous System
+
+Slide 24: “ PIM-SM with redundant Rendezvous Points (RPs)” IP multicast provides an efficient mechanism for the distribution of BUM traffic   in   the   Fabric   Underlay. Fabric Underlay for distribution of the BUM traffic The Spine nodes selected as the RP will do the BUM traffic replication to all VNIs that are members of the Multicast destination group address RP = Rendezvous Point 
+
+Slide 25: “ PIM-SM with redundant Rendezvous Points (RPs)” (Cont.) Fabric Underlay all the nodes in the  EVPN VXLAN  Fabric  Spine1 Spine2 RP = Rendezvous Point  VTEP VTEP VTEP VTEP VTEP VTEP
+
+Slide 26: “ PIM-SM with redundant Rendezvous Points (RPs)” (Cont.) ip pim  rp -address 10.10.10.2  mtu 9216   ip pim sparse-mode mtu 9216  ip pim sparse-mode ip pim rp-address 10.10.10. 2  ip pim anycast-rp 10.10.10. 2  10.10.10. 100 ip pim anycast-rp 10.10.10. 2  10.10.10. 200 ip  pim sparse-mode ip address 10.10.10.2 255.255.255.255 ip pim sparse-mode                      Spine 1 Spine 2 the Spine nodes  PIM-SM  Deployed in  Fabric Underlay
+
+Slide 28: 2020.0000.00AA   SVI   20,   Gateway   IP:   192.168.2.1,   Gateway   MAC:   2020.0000.00AA SVI    = Switched Virtual interface AGM = Anycast Gateway MAC
+
+Slide 29: 2020.0000.00aa 2020.0000.00aa
+
+Slide 30:   #VLAN to VNI mapping# #Anycast Gateway MAC, identically configured on all VTEPs  #Distributed IP Anycast Gateway (SVI),same IP address for a given SVI
+
+Slide 31: “Symmetric IRB”  With Symmetric IRB, both the ingress and egress VTEPs perform Layer 2 and Layer 3 lookups Symmetric IRB introduces Layer 3 VNI:  The layer 3 VNI also provides the basis for enforcing Layer 3 segmentation in the data plane.
+
+Slide 32: “Symmetric IRB” (Cont.) GW-MAC GW-MAC     which means traffic uses the same traffic “path” from Source to Destination VTEP nodes and back. 
+
+Slide 33: “Symmetric IRB” (Cont.) In   this   way,   for   traffic   from   Host    A to Host Y,         a symmetric sequence is performed               Host   A MAC:   0000.3000.1101 IP:   192.168.1.101 VLAN   10 L2VNI   30001 Host   Y MAC:   0000.3000.2102 IP:   192.168.2.102 VLAN   20 L2VNI   30002
+
